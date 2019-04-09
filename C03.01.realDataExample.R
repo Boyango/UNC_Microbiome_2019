@@ -1,11 +1,11 @@
 ############################################################################################
 ### 0. library
   library(dplyr); library(magrittr); library(ggplot2)
-  source("F00.00.generic.R")
-  source("F01.01.base.R")
-  source("F02.01.simulation.R")
-  source("F01.02.models-base.R")
-  source("F01.02.models.R")
+  source("Script/F00.00.generic.R")
+  source("Script/F01.01.base.R")
+  source("Script/F02.01.simulation.R")
+  source("Script/F01.02.models-base.R")
+  source("Script/F01.02.models.R")
   # devtools::install_github("RGLab/MAST");
   # source("https://bioconductor.org/biocLite.R")
   # biocLite("limma")

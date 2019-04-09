@@ -1,7 +1,7 @@
 
 param <- function(scenario.delta, scenario.kappa, scenario.base = 1:dim(baseParam)[1],
-                  baseParam = parameter1,
-                  delta.table = delta, kappa.table = kappa) {
+                  baseParam,
+                  delta.table, kappa.table) {
   require(dplyr)
   if (length(scenario.delta) != 1 & length(scenario.kappa) != 1) stop("scenario.delta(pheno) and scenario.kappa(batch) should be of length 1.")
   # output: list of phenotype-batch combinations with a dataframe(base scenarios x params) as their elements
@@ -33,8 +33,8 @@ param <- function(scenario.delta, scenario.kappa, scenario.base = 1:dim(basePara
 
 rZINB.sim <- function(n.sample = c(20, 20, 20, 20), n.genes=1,
                       scenario.delta, scenario.kappa, scenario.base,
-                      baseParam = parameter1,
-                      delta.table = delta, kappa.table = kappa) {
+                      baseParam,
+                      delta.table, kappa.table) {
   
   require(dplyr); require(magrittr); require(tidyr)
   if (length(scenario.base)!=1) stop("length of scenario.base is not 1.")

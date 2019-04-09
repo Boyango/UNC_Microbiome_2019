@@ -40,8 +40,8 @@
     tryCatch(R.utils::withTimeout(expression, timeout = timeout), 
              TimeoutException = function(ex) {message("Timeout. Skipping.")
                                               return(exception.out)},
-             error = function(ex) {message("Estimation error. Skipping.")
-                                    return(error.out)}
+              error = function(ex) {message("Estimation error. Skipping.")
+                                     return(error.out)}
              ) -> a
     return(a)
   }
@@ -56,7 +56,7 @@
 
     # gamma
     # rvec <- rgamma(n, shape = a, rate = 1/b)
-    rvec <- rgamma(n, shape = t, rate = m/t) #because (a = t) and (b = t/m)
+    rvec <- rgamma(n, shape = m/t, rate = 1/t) #because (a = m/t) and (b = t)
     
     # poisson from gamma
     rvec <- rpois(n, rvec)
