@@ -26,12 +26,12 @@ cat("The Command Arg is: ", str(args))
 i = args[1] %>% as.numeric  # 1..10
 j = args[2] %>% as.numeric  # 1..5
 k = args[3] %>% as.numeric  # 1..46
-#i = 9; j = 5; k = 49
+#i = 1; j = 3; k = 29
 
 
 # k2. do testing for each sim. replicate
 cat("i: ", i,", j: ",j,", k: ",k,", \n")
-set.seed(i*10^2 + j*10 + k, kind = "Mersenne-Twister", normal.kind = "Inversion")
+set.seed(i*10^2 + j*10 + k)
 # 1. parameter
 
 ## param.set = param (i, j, k) # list of H1, D1, H2, D2 (status-batch)

@@ -44,7 +44,7 @@ tester.set.HD.batch <- function(data, n.sim = 1000, sig = 0.05, skeleton = FALSE
       tmp <- data.frame(coef = rep(NA,3), pval = NA)
     } else {
       ## print(data[,l]) (For debug only)
-      tmp <- LB.test(data.l, sig = sig, NAwarning = T)  #logistic beta
+      tmp <- LB.test(data.l, sig = sig, NAwarning = T,l=l)  #logistic beta
     }
     result[[1]][1:3, l] <- tmp[1:3,1] #coef. 1:3 corresponds to "LB.nonz", "LB.zero", "LB.glob"
     result[[2]][1:3, l] <- tmp[1:3,2] #pval. 1:3 corresponds to "LB.nonz", "LB.zero", "LB.glob"
@@ -299,7 +299,7 @@ if (FALSE) {
 }
 
 ### 1~3. LB
-LB.test <- function (data.l, sig = 0.05, test = FALSE, NAwarning = T) {
+LB.test <- function (data.l, sig = 0.05, test = FALSE, NAwarning = T,l=1) {
   out = matrix(NA, 3, 2, 
                dimnames = list(c("LB.nonz", "LB.zero", "LB.glob"), c("Estimate", "pval")))
   data.l$y.prop = data.l$y / data.l$sampleSum
@@ -308,107 +308,118 @@ LB.test <- function (data.l, sig = 0.05, test = FALSE, NAwarning = T) {
   
   # 1. beta model
   ctn.b = TRUE  # Checker to aquire data from model
-  if(length(data.l.positive$y)<2){
+  err.catched = F
+  try({
+    if(length(data.l.positive$y)<2){
+      out1 = c(NA, NA)
+      ctn.b = F
+      err.catched = T
+    }else if(length(unique(data.l.positive$batch)) <2){ # if there is only one batch
+      bereg.pos = try(betareg(y.prop ~ phenotype, 
+                              data = data.l.positive))
+      if (any(class(bereg.pos) %in% "try-error")) {
+        out1 = c(NA, NA)
+        print(paste0("Betareg model Error(no batch)"))
+        ctn.b = F
+      }
+
+      #print(summary(bereg.pos))
+      if(ctn.b & NAwarning){
+        out1 = summary(bereg.pos)$coefficients$mean[2,c(1,4)]
+      }
+      err.catched = T
+    }else{
+      bereg.pos = try(betareg(y.prop ~ phenotype + batch, 
+                              data = data.l.positive))
+      #print("old problem position")    
+      if (any(class(bereg.pos) %in% "try-error")) {
+        out1 = c(NA, NA)
+        print(paste0("Betareg model Error"))
+        ctn.b = F
+      }
+      
+      #print(summary(bereg.pos))
+      if(ctn.b & NAwarning){
+        out1 = summary(bereg.pos)$coefficients$mean[2,c(1,4)]
+      }
+      err.catched = T
+    }
+  })
+  if(err.catched == F){
     out1 = c(NA, NA)
     ctn.b = F
-print("line 314")
-  }else if(length(unique(data.l.positive$batch)) <2){ # if there is only one batch
-print("line 316")
-    bereg.pos = try(betareg(y.prop ~ phenotype, 
-                            data = data.l.positive))
-print("line 319")    
-    if (any(class(bereg.pos) %in% "try-error")) {
-      out1 = c(NA, NA)
-      print(paste0("Betareg model Error(no batch)"))
-      ctn.b = F
-print("line 324")
-    }
-    
-    #print(summary(bereg.pos))
-    if(ctn.b & NAwarning){
-      out1 = summary(bereg.pos)$coefficients$mean[2,c(1,4)]
-print("line 330")      
-    }
-  }else{
-    bereg.pos = try(betareg(y.prop ~ phenotype + batch, 
-                            data = data.l.positive))
-print("line 335")    
-    if (any(class(bereg.pos) %in% "try-error")) {
-      out1 = c(NA, NA)
-      print(paste0("Betareg model Error"))
-      ctn.b = F
-print("line 340")
-    }
-    
-    #print(summary(bereg.pos))
-    if(ctn.b & NAwarning){
-      out1 = summary(bereg.pos)$coefficients$mean[2,c(1,4)]
-print("line 340")
-    }
   }
   
   # 2. logistic model
   ctn.l = TRUE  # Checker to aquire data from model
-  bereg.bin = try(glm(y.bin ~ phenotype + batch, 
-                      family = binomial, data = data.l))
-print("line 354")  
-  if (any(class(bereg.bin) %in% "try-error")) {
-    print(paste0("Logistic model Error"))
+  err.catched = F
+  try({
+    bereg.bin = try(glm(y.bin ~ phenotype + batch, 
+                        family = binomial, data = data.l))
+    if (any(class(bereg.bin) %in% "try-error")) {
+      print(paste0("Logistic model Error"))
+      ctn.l = F
+    }
+    
+    #print(summary(bereg.bin))
+    if(ctn.l & NAwarning){
+      out2 = summary(bereg.bin)$coefficients[2,c(1,4)]
+    }
+    err.catched = T
+  })
+  if(err.catched == F){
+    out2 = c(NA, NA)
     ctn.l = F
-print("line 358")
-  }
-  
-  #print(summary(bereg.bin))
-  if(ctn.l & NAwarning){
-    out2 = summary(bereg.bin)$coefficients[2,c(1,4)]
-print("line 364")
   }
   # 3. null models
   ## 1. null beta
   ctn.nb = TRUE  # Checker to aquire data from model
-  if(length(data.l.positive$y)<2){
-    bereg.pos.null = NA
+  err.catched = F
+  try({
+    if(length(data.l.positive$y)<2){
+      bereg.pos.null = NA
+      ctn.nb = F
+      err.catched = T
+    }else if(length(unique(data.l.positive$batch)) <2){
+      bereg.pos.null = try(betareg(y.prop ~ 1, 
+                                   data = data.l.positive))
+      if (any(class(bereg.pos.null) %in% "try-error")) {
+        print(paste0("Betareg null model Error"))
+        ctn.nb = FALSE
+      }
+      err.catched = T
+    }else{
+      bereg.pos.null = try(betareg(y.prop ~ batch, 
+                                   data = data.l.positive))
+      if (any(class(bereg.pos.null) %in% "try-error")) {
+        print(paste0("Betareg null model Error"))
+        ctn.nb = FALSE
+      }
+      err.catched = T
+    }
+  })
+  if(err.catched == F){
     ctn.nb = F
-print("line 372")
-  }else if(length(unique(data.l.positive$batch)) <2){
-print("line 374")
-    bereg.pos.null = try(betareg(y.prop ~ 1, 
-                                 data = data.l.positive))
-print("line 377")
-    if (any(class(bereg.pos.null) %in% "try-error")) {
-      print(paste0("Betareg null model Error"))
-      ctn.nb = FALSE
-print("line 381")
-    }
-  }else{
-print("line 3784")
-    bereg.pos.null = try(betareg(y.prop ~ batch, 
-                                 data = data.l.positive))
-print("line 387")
-    if (any(class(bereg.pos.null) %in% "try-error")) {
-      print(paste0("Betareg null model Error"))
-      ctn.nb = FALSE
-print("line 391")
-    }
   }
-  
   ## 2. null logistic
   ctn.nl = TRUE  # Checker to aquire data from model
-print("line 397")
-  bereg.bin.null = try(glm(y.bin ~ batch, 
-                           family = binomial, data = data.l))
-print("line 400")
-  if (any(class(bereg.bin.null) %in% "try-error")) {
-    print(paste0("Logistic null model Error"))
+  err.catched = F
+  try({
+    bereg.bin.null = try(glm(y.bin ~ batch, 
+                             family = binomial, data = data.l))
+    if (any(class(bereg.bin.null) %in% "try-error")) {
+      print(paste0("Logistic null model Error"))
+      ctn.nl = F
+    }
+    err.catched = T
+  })
+  if(err.catched == F){
     ctn.nl = F
-print("line 404")
   }
   # 4. global likelihood
   if(!ctn.l | !ctn.nl){
-print("line 408")
     out3 = out1
   }else if(!ctn.b | !ctn.nb) {
-print("line 411")
     out3 = out2
   }else{
     chisq = 2*((logLik(bereg.bin)[1] + summary(bereg.pos)$loglik) - 
