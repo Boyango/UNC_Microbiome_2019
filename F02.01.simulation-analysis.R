@@ -1,4 +1,4 @@
-source("Script/C01.02.simulation.setup.R")
+source("C01.02.simulation.setup.R")
 # rounding numbers
 if (FALSE) {result.stat %<>% mutate(LB.nonz = round(LB.nonz, 3), LB.zero = round(LB.zero, 3),
                         LB.glob = round(LB.glob, 3),

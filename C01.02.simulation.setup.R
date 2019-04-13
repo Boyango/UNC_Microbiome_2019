@@ -1,8 +1,8 @@
 ### 0.1 library
 library(dplyr); library(magrittr); library(ggplot2); library(gridExtra); require(tidyr)
-source("Script/F00.00.generic.R")
-source("Script/F01.01.base.R")
-source("Script/F01.02.models.R")
+source("F00.00.generic.R")
+source("F01.01.base.R")
+source("F01.02.models.R")
 
 ### 1.0 simulation parameters  
 # dataset-wise parameters

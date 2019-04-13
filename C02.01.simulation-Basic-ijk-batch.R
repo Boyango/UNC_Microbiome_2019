@@ -1,16 +1,16 @@
 ### 0.1 library
 library(dplyr); library(magrittr); library(ggplot2); library(gridExtra)
-source("Script/F00.00.generic.R")
-source("Script/F01.01.base.R")
-source("Script/F02.01.simulation.R")
-source("Script/F01.02.models-base.R")
-source("Script/F01.02.models.R")
+source("F00.00.generic.R")
+source("F01.01.base.R")
+source("F02.01.simulation.R")
+source("F01.02.models-base.R")
+source("F01.02.models.R")
 # devtools::install_github("RGLab/MAST");
 library(MAST)
 library(coin)
 
 # required parameters from...
-source("Script/C01.02.simulation.setup.R")
+source("C01.02.simulation.setup.R")
 #parameter1; delta; kappa
 (parameter = parameter3); 
 (delta = delta1); 

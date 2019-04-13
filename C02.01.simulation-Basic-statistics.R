@@ -1,5 +1,5 @@
-source("Script/C01.02.simulation.setup.R")
-source("Script/F02.01.simulation-analysis.R")
+source("C01.02.simulation.setup.R")
+source("F02.01.simulation-analysis.R")
 ##install.packages("gamlss")
 library(gamlss)
 library(dplyr); library(magrittr); library(ggplot2); library(gridExtra)
