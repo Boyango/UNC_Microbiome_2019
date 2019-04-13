@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1555126521341.000,
+    "dirty" : false,
+    "encoding" : "ASCII",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "2424C022",
+    "lastKnownWriteTime" : 1555127033,
+    "last_content_update" : 1555127033453,
+    "path" : "~/Dropbox/UNC_Microbiome_2019/C02.01.simulation-Basic-ijk-batch.R",
+    "project_path" : "C02.01.simulation-Basic-ijk-batch.R",
+    "properties" : {
+        "cursorPosition" : "12,8",
+        "scrollLine" : "0"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
