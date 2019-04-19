@@ -8,6 +8,7 @@ if(!require(betareg)){
 # testing all methods using counts (or RPK) of a single gene (old: single gene. cannot do MAST).
 # HD: binary phenotype (healthy-diseased)
 tester.set.HD.batch <- function(data, n.sim = 1000, sig = 0.05, skeleton = FALSE) {
+  print(sessionInfo())
   # description
   # data should have y and sampleSum    all n.sample x (n.sim(gene) + 3 (phenotype + batch + sampleSum))
   #          outcome (phenotype), nuisance (batch)
