@@ -44,7 +44,7 @@ tester.set.HD.batch <- function(data, n.sim = 1000, sig = 0.05, skeleton = FALSE
       tmp <- data.frame(coef = rep(NA,3), pval = NA)
     } else {
       ## print(data[,l]) (For debug only)
-      tmp <- LB.test(data.l, sig = sig, NAwarning = T,l=l)  #logistic beta
+      tmp <- LB(data.l, sig = sig, NAwarning = T,l=l)  #logistic beta
     }
     result[[1]][1:3, l] <- tmp[1:3,1] #coef. 1:3 corresponds to "LB.nonz", "LB.zero", "LB.glob"
     result[[2]][1:3, l] <- tmp[1:3,2] #pval. 1:3 corresponds to "LB.nonz", "LB.zero", "LB.glob"
@@ -180,7 +180,7 @@ if (FALSE) {# examples
 
 
 ### 1~3. LB
-LB.old <- function (data, sig = 0.05, test = FALSE) {
+LB <- function (data, sig = 0.05, test = FALSE) {
   require(gamlss)
   data$y.prop = data$y / data$sampleSum  #sampleSum[j] = sum_g y_g,j (g:gene, j:sample)
   # print(head(data$y.prop))  
@@ -225,7 +225,7 @@ LB.old <- function (data, sig = 0.05, test = FALSE) {
 }
 
 ### 1~3. LB
-LB <- function (data, sig = 0.05, test = FALSE , NAwarning = T) {
+LB.new <- function (data, sig = 0.05, test = FALSE , NAwarning = T) {
   if(!require(betareg)){
     install.packages("betareg")
   }
